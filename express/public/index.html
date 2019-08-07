@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Template • TodoMVC</title>
+</head>
+<body>
+    <section class="todoapp" ref="main">
+        <header class="header">
+            <h1>todos</h1>
+            <button class="login" v-if="!window.isLogin">
+                <a href="https://github.com/login/oauth/authorize?client_id=376770a70a24778e582c&state=55555&scope=user">github登录</a>
+            </button>
+            <button class="login" @click="logout" v-else>
+               <a>注销</a>
+            </button>
+            <input class="new-todo" placeholder="What needs to be done?" v-model.trim="newList" @keyup.enter="addList" autofocus>
+        </header>
+        <!-- This section should be hidden by default and shown when there are todos -->
+        <section class="main">
+            <input id="toggle-all" class="toggle-all" type="checkbox" @click="finishAll">
+            <label for="toggle-all">Mark all as complete</label>
+            <ul class="todo-list">
+                <!-- These are here just to show the structure of the list items -->
+                <!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
+                <li :class={completed:value.isComplete} v-for="(value,index) in lists" :key="value._id">
+                    <div class="view">
+                        <input class="toggle" type="checkbox" @click="changeCompleted(value._id, value.isComplete)" :checked="value.isComplete">
+                        <label @dblclick="editList($event)">{{value.list}}</label>
+                        <button class="destroy" @click="removeList(value._id)"></button>
+                    </div>
+                    <input class="edit" @keyup.enter="finishEdit($event, value._id, value.list)" @blur="finishEdit($event, value._id, value.list)" v-model.lazy="value.list"> 
+                </li>
+            </ul>
+        </section>
+        <!-- This footer should hidden by default and shown when there are todos -->
+        <footer class="footer">
+            <!-- This should be `0 items left` by default -->
+            <span class="todo-count"><strong>{{incomplete}}</strong> item left</span>
+            <!-- Remove this if you don't implement routing -->
+            <ul class="filters">
+                <li>
+                    <a :class="{selected: visibility == ''}" href="#/">All</a>
+                </li>
+                <li>
+                    <a :class="{selected: visibility == 'active'}" href="#/active">Active</a>
+                </li>
+                <li>
+                    <a :class="{selected: visibility == 'completed'}" href="#/completed">Completed</a>
+                </li>
+            </ul>
+            <!-- Hidden if no completed items are left ↓ -->
+            <button class="clear-completed" @click="clear" v-show="lists.length - incomplete > 0">Clear completed</button>
+        </footer>
+        <div class="loading" ref="loading" v-show="loading"></div>
+        <!-- <div class="dialog-wrapper">
+            <div class="dialog">
+                <input type="text"><label for="">用户名</label>
+                <input type="text"><label for="">密码</label>
+            </div>
+        </div> -->
+    </section>
+    <footer class="info">
+        <p>Double-click to edit a todo</p>
+        <!-- Remove the below line ↓ -->
+        <p>Template by <a href="http://sindresorhus.com">Sindre Sorhus</a></p>
+        <!-- Change this out with your name and url ↓ -->
+        <p>Created by <a href="https://github.com/xdh5">xdh5</a></p>
+        <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script type="text/javascript" src="main.bundle.js"></script></body>
+</html>
